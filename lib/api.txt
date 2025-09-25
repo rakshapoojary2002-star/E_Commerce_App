@@ -1,0 +1,1155 @@
+{
+  "info": {
+    "name": "TCommerce API Collection",
+    "description": "Complete API collection for TCommerce backend with authentication endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://tcommmerce.vercel.app",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "User Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Password123!\",\n  \"phone\": \"+1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "register"]
+            },
+            "description": "Register a new user account\n\n**Rate Limit:** 5 requests per 15 minutes\n\n**Validation Rules:**\n- firstName: 2-50 characters, required\n- lastName: 2-50 characters, required\n- email: Valid email format, required\n- password: 8-128 characters, must contain uppercase, lowercase, number, and special character, required\n- phone: Valid international phone number format, optional"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Password123!\",\n  \"phone\": \"+1234567890\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/register",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "auth", "register"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User registered successfully\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"uuid\",\n      \"firstName\": \"John\",\n      \"lastName\": \"Doe\",\n      \"email\": \"john.doe@example.com\",\n      \"phone\": \"+1234567890\",\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\"\n    },\n    \"token\": \"jwt_token_here\"\n  }\n}"
+            },
+            {
+              "name": "Validation Error",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"invalid-email\",\n  \"password\": \"weak\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/register",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "auth", "register"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed\",\n  \"errors\": [\n    \"Please provide a valid email address\",\n    \"Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "description": "Authenticate user and get access token\n\n**Rate Limit:** 10 requests per 15 minutes\n\n**Validation Rules:**\n- email: Valid email format, required\n- password: Required"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Password123!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/login",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "auth", "login"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"uuid\",\n      \"firstName\": \"John\",\n      \"lastName\": \"Doe\",\n      \"email\": \"john.doe@example.com\",\n      \"phone\": \"+1234567890\",\n      \"lastLogin\": \"2024-01-15T10:30:00.000Z\"\n    },\n    \"token\": \"jwt_token_here\"\n  }\n}"
+            },
+            {
+              "name": "Invalid Credentials",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/login",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "auth", "login"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Invalid email or password\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "profile"]
+            },
+            "description": "Get authenticated user's profile information\n\n**Authentication:** Required (Bearer Token)\n\n**Headers:**\n- Authorization: Bearer <jwt_token>"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer jwt_token_here",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/profile",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "auth", "profile"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"user\": {\n      \"id\": \"uuid\",\n      \"firstName\": \"John\",\n      \"lastName\": \"Doe\",\n      \"email\": \"john.doe@example.com\",\n      \"phone\": \"+1234567890\",\n      \"isActive\": true,\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n      \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n    }\n  }\n}"
+            },
+            {
+              "name": "Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/profile",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "auth", "profile"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Access denied. No token provided\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "API Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "health"]
+            },
+            "description": "Check API health and status"
+          },
+          "response": []
+        },
+        {
+          "name": "Root Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Get API information and available endpoints"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/",
+                  "host": ["{{baseUrl}}"],
+                  "path": [""]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Welcome to TCommerce API\",\n  \"version\": \"1.0.0\",\n  \"documentation\": \"/api/v1/health\",\n  \"endpoints\": {\n    \"health\": \"GET /api/v1/health\",\n    \"register\": \"POST /api/v1/auth/register\",\n    \"login\": \"POST /api/v1/auth/login\",\n    \"profile\": \"GET /api/v1/auth/profile\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-save auth token from login response",
+          "if (pm.response.json() && pm.response.json().data && pm.response.json().data.token) {",
+          "    pm.collectionVariables.set('authToken', pm.response.json().data.token);",
+          "    console.log('Auth token saved automatically');",
+          "}"
+        ]
+      }
+    }
+  ]
+}
+
+
+{
+	"info": {
+		"_postman_id": "tcommerce-categories-products-api",
+		"name": "TCommerce - Categories & Products API",
+		"description": "Complete API collection for TCommerce Categories and Products endpoints with sample data",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/health",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"health"
+					]
+				},
+				"description": "Check API health and see all available endpoints"
+			}
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories"
+							]
+						},
+						"description": "Fetch all active categories"
+					}
+				},
+				{
+					"name": "Get All Categories (Including Inactive)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories?active=false",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories"
+							],
+							"query": [
+								{
+									"key": "active",
+									"value": "false"
+								}
+							]
+						},
+						"description": "Fetch all categories including inactive ones"
+					}
+				},
+				{
+					"name": "Get Category by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"1"
+							]
+						},
+						"description": "Get specific category by ID (Fruits & Vegetables)"
+					}
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required for admin operations"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Organic Products\",\n  \"description\": \"Certified organic and natural products\",\n  \"imageUrl\": \"https://images.unsplash.com/photo-1542838132-92c53300491e?w=400\",\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories"
+							]
+						},
+						"description": "Create a new category (requires authentication)"
+					}
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required for admin operations"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Fresh Fruits & Vegetables\",\n  \"description\": \"Farm-fresh fruits and vegetables delivered daily\",\n  \"image_url\": \"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"1"
+							]
+						},
+						"description": "Update existing category (requires authentication)"
+					}
+				},
+				{
+					"name": "Deactivate Category",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required for admin operations"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories/1/deactivate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"1",
+								"deactivate"
+							]
+						},
+						"description": "Deactivate a category (requires authentication)"
+					}
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required for admin operations"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"11"
+							]
+						},
+						"description": "Delete a category (requires authentication) - Using ID 11 to avoid deleting sample data"
+					}
+				}
+			],
+			"description": "Category management endpoints"
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						},
+						"description": "Get all active products with default pagination"
+					}
+				},
+				{
+					"name": "Get Products with Filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products?category_id=1&limit=10&page=1&sort_by=price&sort_order=asc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"description": "Filter by Fruits & Vegetables category"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Limit results to 10"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "First page"
+								},
+								{
+									"key": "sort_by",
+									"value": "price",
+									"description": "Sort by price"
+								},
+								{
+									"key": "sort_order",
+									"value": "asc",
+									"description": "Ascending order"
+								}
+							]
+						},
+						"description": "Get products with filtering, sorting, and pagination"
+					}
+				},
+				{
+					"name": "Get Featured Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/featured?limit=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"featured"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Limit to 5 featured products"
+								}
+							]
+						},
+						"description": "Get featured products for homepage display"
+					}
+				},
+				{
+					"name": "Search Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/search?q=organic&limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "organic",
+									"description": "Search for 'organic' products"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Limit results"
+								}
+							]
+						},
+						"description": "Search products by name, description, or brand"
+					}
+				},
+				{
+					"name": "Search Products in Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/search?q=chicken&category_id=3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "chicken",
+									"description": "Search for 'chicken'"
+								},
+								{
+									"key": "category_id",
+									"value": "3",
+									"description": "Only in Meat & Seafood category"
+								}
+							]
+						},
+						"description": "Search products within a specific category"
+					}
+				},
+				{
+					"name": "Get Products by Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/category/2?limit=20&page=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"category",
+								"2"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Products per page"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number"
+								}
+							]
+						},
+						"description": "Get all products in Dairy & Eggs category"
+					}
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1"
+							]
+						},
+						"description": "Get detailed information for a specific product (Organic Bananas)"
+					}
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required for admin operations"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Premium Avocados\",\n  \"description\": \"Fresh Hass avocados, perfect for guacamole or toast\",\n  \"price\": 4.99,\n  \"originalPrice\": 5.99,\n  \"categoryId\": 1,\n  \"sku\": \"FRUIT-AVO-001\",\n  \"stockQuantity\": 30,\n  \"imageUrl\": \"https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=400\",\n  \"images\": [\n    \"https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=400\",\n    \"https://images.unsplash.com/photo-1590301157890-4810ed352733?w=400\"\n  ],\n  \"isActive\": true,\n  \"isFeatured\": true,\n  \"weight\": 2.0,\n  \"unit\": \"lb\",\n  \"brand\": \"Fresh Valley\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						},
+						"description": "Create a new product (requires authentication)"
+					}
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required for admin operations"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Premium Organic Bananas\",\n  \"description\": \"Fresh organic bananas, perfect for breakfast, snacking, or smoothies\",\n  \"price\": 3.49,\n  \"original_price\": 3.99,\n  \"stock_quantity\": 45,\n  \"is_featured\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1"
+							]
+						},
+						"description": "Update existing product (requires authentication)"
+					}
+				},
+				{
+					"name": "Update Product Stock",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required for admin operations"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"stock_quantity\": 25\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/1/stock",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1",
+								"stock"
+							]
+						},
+						"description": "Update only the stock quantity of a product (requires authentication)"
+					}
+				},
+				{
+					"name": "Deactivate Product",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required for admin operations"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/1/deactivate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1",
+								"deactivate"
+							]
+						},
+						"description": "Deactivate a product (requires authentication)"
+					}
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required for admin operations"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/25",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"25"
+							]
+						},
+						"description": "Delete a product (requires authentication) - Using ID 25 to avoid deleting sample data"
+					}
+				}
+			],
+			"description": "Product management endpoints"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string",
+			"description": "Base URL for the TCommerce API"
+		},
+		{
+			"key": "auth_token",
+			"value": "your_jwt_token_here",
+			"type": "string",
+			"description": "JWT token for authenticated requests (get from login endpoint)"
+		}
+	]
+}
+
+1. Categories APIs
+ 
+  GET /api/v1/categories
+ 
+  Purpose: Display main navigation/category menu
+  // Used for: Homepage category grid, navigation
+  menu, filter options
+  GET /api/v1/categories
+  When to use:
+  - App startup to show category navigation
+  - Homepage category tiles/cards
+  - Filter dropdown in product search
+  - Main menu categories
+ 
+  Frontend Example:
+  // Show category grid on homepage
+  const categories = await
+  fetch('/api/v1/categories');
+  // Display: "Fruits & Vegetables", "Dairy & Eggs",      
+  "Meat & Seafood", etc.
+ 
+  GET /api/v1/categories/:id
+ 
+  Purpose: Show category details and description
+  // Used for: Category page header, breadcrumbs
+  GET /api/v1/categories/1  // Fruits & Vegetables        
+  details
+  When to use:
+  - Category page headers with description
+  - Breadcrumb navigation
+  - Category-specific promotions
+ 
+  ---
+  2. Products APIs
+ 
+  GET /api/v1/products
+ 
+  Purpose: Main product listing with filters and
+  sorting
+  // Used for: Product catalog, filtered browsing,        
+  sorted views
+  GET /api/v1/products?limit=20&page=1&sort_by=price&s    
+  ort_order=asc
+  When to use:
+  - "All Products" page
+  - Filtered product browsing
+  - Sorted product lists (by price, name, newest)
+  - Paginated product grids
+ 
+  Query Parameters:
+  - limit: Products per page (default 50, max 100)        
+  - page: Page number for pagination
+  - sort_by: name, price, created_at, stock_quantity      
+  - sort_order: asc, desc
+  - active: true/false (default true)
+ 
+  GET /api/v1/products/featured
+ 
+  Purpose: Homepage featured/promoted products
+  // Used for: Homepage banners, "Weekly Deals",
+  promotional sections
+  GET /api/v1/products/featured?limit=8
+  When to use:
+  - Homepage hero section
+  - "Featured Products" carousel
+  - "Weekly Deals" section
+  - Promotional banners
+ 
+  GET /api/v1/products/search
+ 
+  Purpose: Product search functionality
+  // Used for: Search bar results, autocomplete
+  suggestions
+  GET /api/v1/products/search?q=organic&limit=20
+  GET /api/v1/products/search?q=apple&category_id=1       
+  // Search in specific category
+  When to use:
+  - Search bar results page
+  - Autocomplete/suggestions
+  - Voice search results
+  - Barcode scanner results
+ 
+  Query Parameters:
+  - q: Search term (minimum 2 characters)
+  - category_id: Filter search within category
+  - limit, page: Pagination
+ 
+  GET /api/v1/products/category/:categoryId
+ 
+  Purpose: Browse products within a specific category     
+  // Used for: Category pages, filtered browsing
+  GET /api/v1/products/category/1?limit=20&page=1  //     
+  All Fruits & Vegetables
+  When to use:
+  - User clicks on "Fruits & Vegetables" category
+  - Category-specific browsing pages
+  - Filtered product views
+  - Department-specific shopping
+ 
+  GET /api/v1/products/:id
+ 
+  Purpose: Product detail page with full information      
+  // Used for: Product detail pages, quick view modals    
+  GET /api/v1/products/15  // Specific product details    
+  When to use:
+  - Product detail page (when user taps product)
+  - Quick view popups
+  - Add to cart confirmation
+  - Product comparison pages
+ 
+  Returns full product info:
+  - Complete description, images, price, stock
+  - Category information
+  - Weight, unit, brand details
+  - All product specifications
+ 
+  ---
+  🎯 Real User Journey with APIs
+ 
+  App Launch Flow:
+ 
+  1. GET /api/v1/categories
+     → Show category navigation: "Fruits", "Dairy",       
+  "Meat", etc.
+ 
+  2. GET /api/v1/products/featured?limit=6
+     → Homepage banner: "Organic Bananas $2.99",
+  "Chicken Breast $8.99"
+ 
+  Category Browsing Flow:
+ 
+  1. User taps "Fruits & Vegetables"
+     → GET /api/v1/categories/1  // Category details      
+  for header
+ 
+  2. → GET /api/v1/products/category/1?limit=20
+     → Show: Bananas, Apples, Spinach grid with
+  images/prices
+ 
+  Search Flow:
+ 
+  1. User types "organic" in search
+     → GET /api/v1/products/search?q=organic&limit=20     
+     → Show: All organic products across categories       
+ 
+  2. User applies category filter
+     → GET
+  /api/v1/products/search?q=organic&category_id=1
+     → Show: Only organic fruits & vegetables
+ 
+  Product Detail Flow:
+ 
+  1. User taps "Organic Bananas"
+     → GET /api/v1/products/1
+     → Show: Full details, nutrition info, stock
+  status, related products
+ 
+  Advanced Browsing:
+ 
+  1. Sort by price (low to high)
+     → GET
+  /api/v1/products?sort_by=price&sort_order=asc
+ 
+  2. Browse page 2 of results
+     → GET /api/v1/products?page=2&limit=20
+ 
+  3. Filter by category + sort
+     → GET
+  /api/v1/products?category_id=2&sort_by=name&limit=15
