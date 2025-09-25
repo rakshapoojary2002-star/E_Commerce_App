@@ -11,10 +11,11 @@ class TextFieldWidget extends StatelessWidget {
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
 
-  // NEW: focus and keyboard navigation support
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onSubmitted;
+
+  final String? errorText; // ✅ NEW
 
   const TextFieldWidget({
     super.key,
@@ -29,17 +30,20 @@ class TextFieldWidget extends StatelessWidget {
     this.focusNode,
     this.textInputAction,
     this.onSubmitted,
+    this.errorText, // ✅ NEW
   });
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
+            color: colorScheme.onSurface,
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -59,28 +63,32 @@ class TextFieldWidget extends StatelessWidget {
             prefixIcon: Icon(
               icon,
               size: 20.sp,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
             ),
             suffixIcon: suffixIcon,
             filled: true,
-            fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
+            fillColor: colorScheme.surfaceContainerLow,
+            errorText: errorText, // ✅ show error message
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.outline,
-              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.outline,
-              ),
+              borderSide: BorderSide(color: colorScheme.outline),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.primary,
-              ),
+              borderSide: BorderSide(color: colorScheme.primary),
+            ),
+            errorBorder: OutlineInputBorder(
+              // ✅ red border when error
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: colorScheme.error, width: 1.5),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              // ✅ red border on focus + error
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: colorScheme.error, width: 1.5),
             ),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16.w,

@@ -5,7 +5,7 @@ class CategoryModel extends CategoryEntity {
   static const String baseUrl = 'https://tcommmerce.vercel.app';
 
   const CategoryModel({
-    required String id,
+    required int id,
     required String name,
     String? description,
     String? imageUrl,
@@ -20,7 +20,7 @@ class CategoryModel extends CategoryEntity {
     }
 
     return CategoryModel(
-      id: json['_id'] ?? '',
+      id: json['id'] ?? 0,
       name: json['name'] ?? '',
       description: json['description'],
       imageUrl: imageUrl,

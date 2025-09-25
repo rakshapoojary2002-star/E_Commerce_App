@@ -1,3 +1,4 @@
+import 'package:e_commerce_app/presentation/cart/screens/cart_screen.dart';
 import 'package:flutter/material.dart';
 
 class CartTab extends StatelessWidget {
@@ -5,8 +6,6 @@ class CartTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Cart is empty'),
-    );
+    return const CartScreen();
   }
 }

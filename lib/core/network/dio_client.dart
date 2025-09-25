@@ -15,7 +15,6 @@ class DioClient {
 
   Dio get dio => _dio;
 
-  /// ✅ Add this helper for authorized requests
   Options getAuthOptions(String token) {
     return Options(
       headers: {

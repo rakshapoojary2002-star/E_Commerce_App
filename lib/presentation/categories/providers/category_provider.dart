@@ -14,7 +14,7 @@ final categoriesProvider = FutureProvider<List<CategoryEntity>>((ref) async {
   return categories;
 });
 
-final categoryByIdProvider = FutureProvider.family<CategoryEntity, String>((
+final categoryByIdProvider = FutureProvider.family<CategoryEntity, int>((
   ref,
   id,
 ) async {

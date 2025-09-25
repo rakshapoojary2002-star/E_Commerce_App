@@ -1,5 +1,5 @@
 class CategoryEntity {
-  final String id;
+  final int id;
   final String name;
   final String? description;
   final String? imageUrl; // Make sure this exists

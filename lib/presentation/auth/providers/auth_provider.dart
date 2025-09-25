@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:e_commerce_app/data/auth/repositories/auth_repository_impl.dart';
 import 'package:e_commerce_app/domain/auth/repositories/auth_repository.dart';
-import 'dio_provider.dart';
+import '../../../core/providers/dio_provider.dart';
 
 // Repository provider
 final authRepositoryProvider = Provider<AuthRepository>((ref) {

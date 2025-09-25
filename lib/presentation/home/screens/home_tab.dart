@@ -1,7 +1,6 @@
+import 'package:e_commerce_app/presentation/widgets/shimmer_loading.dart';
 import 'package:e_commerce_app/domain/categories/entities/category_entity.dart';
-import 'package:e_commerce_app/domain/product/entities/Product.dart';
-import 'package:e_commerce_app/presentation/products/providers/featuredProductsProvider.dart';
-import 'package:e_commerce_app/presentation/products/screens/products.dart';
+import 'package:e_commerce_app/presentation/product/screens/products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,7 +12,6 @@ class HomeTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final categoriesAsync = ref.watch(categoriesProvider);
-    final featuredProductsAsync = ref.watch(featuredProductsProvider(6));
 
     return Scaffold(
       appBar: AppBar(
@@ -29,102 +27,12 @@ class HomeTab extends ConsumerWidget {
       body: RefreshIndicator(
         onRefresh: () async {
           ref.refresh(categoriesProvider);
-          ref.refresh(featuredProductsProvider(6));
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Featured Products Carousel
-              featuredProductsAsync.when(
-                data: (products) {
-                  if (products.isEmpty) return const SizedBox.shrink();
-                  return SizedBox(
-                    height: 220,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.all(16),
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        final ProductEntity product = products[index];
-                        return Container(
-                          width: 150,
-                          margin: const EdgeInsets.only(right: 12),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Expanded(
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(16),
-                                  ),
-                                  child: CachedNetworkImage(
-                                    imageUrl: product.imageUrl,
-                                    fit: BoxFit.cover,
-                                    placeholder:
-                                        (context, url) => const Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                    errorWidget:
-                                        (context, url, error) => Container(
-                                          color: Colors.grey.shade200,
-                                          child: const Icon(
-                                            Icons.shopping_bag,
-                                            size: 48,
-                                          ),
-                                        ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      "\$${product.price.toStringAsFixed(2)}",
-                                      style: const TextStyle(
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error:
-                    (error, _) =>
-                        Center(child: Text("Featured Products Error: $error")),
-              ),
-
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text(
@@ -133,7 +41,6 @@ class HomeTab extends ConsumerWidget {
                 ),
               ),
 
-              // Categories Grid
               categoriesAsync.when(
                 data:
                     (categories) => Padding(
@@ -164,7 +71,6 @@ class HomeTab extends ConsumerWidget {
                                 ),
                               );
                             },
-
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
@@ -192,36 +98,22 @@ class HomeTab extends ConsumerWidget {
                                       borderRadius: const BorderRadius.vertical(
                                         top: Radius.circular(20),
                                       ),
-                                      child:
-                                          category.imageUrl != null
-                                              ? CachedNetworkImage(
-                                                imageUrl: category.imageUrl!,
-                                                fit: BoxFit.cover,
-                                                placeholder:
-                                                    (context, url) => Container(
-                                                      color:
-                                                          Colors.grey.shade200,
-                                                    ),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Container(
-                                                          color:
-                                                              Colors
-                                                                  .grey
-                                                                  .shade200,
-                                                          child: const Icon(
-                                                            Icons.category,
-                                                            size: 48,
-                                                          ),
-                                                        ),
-                                              )
-                                              : Container(
-                                                color: Colors.grey.shade200,
-                                                child: const Icon(
-                                                  Icons.category,
-                                                  size: 48,
-                                                ),
+                                      child: CachedNetworkImage(
+                                        imageUrl: category.imageUrl ?? '',
+                                        fit: BoxFit.cover,
+                                        placeholder:
+                                            (context, url) => Container(
+                                              color: Colors.grey.shade200,
+                                            ),
+                                        errorWidget:
+                                            (context, url, error) => Container(
+                                              color: Colors.grey.shade200,
+                                              child: const Icon(
+                                                Icons.image_not_supported,
+                                                size: 48,
                                               ),
+                                            ),
+                                      ),
                                     ),
                                   ),
                                   Padding(
@@ -265,7 +157,10 @@ class HomeTab extends ConsumerWidget {
                         },
                       ),
                     ),
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: ShimmerLoading(),
+                ),
                 error:
                     (error, _) => Center(
                       child: Text(

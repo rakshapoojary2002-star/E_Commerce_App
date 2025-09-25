@@ -18,7 +18,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
   }
 
   @override
-  Future<CategoryEntity> getCategoryById(String id) async {
+  Future<CategoryEntity> getCategoryById(int id) async {
     final response = await dioClient.dio.get('/api/v1/categories/$id');
     return CategoryModel.fromJson(response.data['data']);
   }

@@ -1,3 +1,5 @@
+import 'package:e_commerce_app/core/utils/flutter_secure.dart';
+import 'package:e_commerce_app/core/utils/validators.dart';
 import 'package:e_commerce_app/presentation/auth/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,6 +38,30 @@ class _AuthFormState extends ConsumerState<AuthForm> {
   bool _isLoading = false;
   bool _showPasswordRules = false;
 
+  // 🔴 Field error map
+  Map<String, String?> _fieldErrors = {
+    'firstName': null,
+    'lastName': null,
+    'email': null,
+    'phone': null,
+    'password': null,
+  };
+
+  bool get _hasMinLength => _passwordController.text.length >= 8;
+  bool get _hasUppercase => _passwordController.text.contains(RegExp(r'[A-Z]'));
+  bool get _hasLowercase => _passwordController.text.contains(RegExp(r'[a-z]'));
+  bool get _hasNumber => _passwordController.text.contains(RegExp(r'[0-9]'));
+  bool get _hasSpecial =>
+      _passwordController.text.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -51,58 +77,84 @@ class _AuthFormState extends ConsumerState<AuthForm> {
     super.dispose();
   }
 
-  bool get _hasMinLength => _passwordController.text.length >= 8;
-  bool get _hasUppercase => _passwordController.text.contains(RegExp(r'[A-Z]'));
-  bool get _hasLowercase => _passwordController.text.contains(RegExp(r'[a-z]'));
-  bool get _hasNumber => _passwordController.text.contains(RegExp(r'[0-9]'));
-  bool get _hasSpecial =>
-      _passwordController.text.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
-  bool get _isPasswordValid =>
-      _hasMinLength &&
-      _hasUppercase &&
-      _hasLowercase &&
-      _hasNumber &&
-      _hasSpecial;
-
-  void _showMessage(String message, {bool success = true}) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final bgColor = success ? colorScheme.tertiary : colorScheme.error;
-    final textColor = success ? colorScheme.onTertiary : colorScheme.onError;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(color: textColor, fontSize: 14.sp),
-        ),
-        backgroundColor: bgColor,
-        behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.all(12.w),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+  void _clearErrors() {
+    _fieldErrors.updateAll((key, value) => null);
   }
 
   Future<void> _submit() async {
-    if (!widget.isSignIn && _firstNameController.text.trim().isEmpty) {
-      _showMessage('Please enter first name', success: false);
-      return;
-    }
+    _clearErrors();
 
-    if (_emailController.text.isEmpty ||
-        !RegExp(
-          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-        ).hasMatch(_emailController.text)) {
-      _showMessage('Please enter a valid email', success: false);
-      return;
-    }
+    if (!widget.isSignIn) {
+      final firstNameError = Validators.validateFirstName(
+        _firstNameController.text,
+      );
+      if (firstNameError != null) {
+        _fieldErrors['firstName'] = firstNameError;
+        _firstNameFocus.requestFocus();
+        _showMessage(firstNameError, success: false);
+        setState(() {});
+        return;
+      }
 
-    if (!widget.isSignIn && !_isPasswordValid) {
-      _showMessage('Password does not meet requirements', success: false);
-      return;
+      final lastNameError = Validators.validateLastName(
+        _lastNameController.text,
+      );
+      if (lastNameError != null) {
+        _fieldErrors['lastName'] = lastNameError;
+        _lastNameFocus.requestFocus();
+        _showMessage(lastNameError, success: false);
+        setState(() {});
+        return;
+      }
+
+      final emailError = Validators.validateEmail(_emailController.text);
+      if (emailError != null) {
+        _fieldErrors['email'] = emailError;
+        _emailFocus.requestFocus();
+        _showMessage(emailError, success: false);
+        setState(() {});
+        return;
+      }
+
+      final phoneError = Validators.validatePhone(_phoneController.text);
+      if (phoneError != null) {
+        _fieldErrors['phone'] = phoneError;
+        _phoneFocus.requestFocus();
+        _showMessage(phoneError, success: false);
+        setState(() {});
+        return;
+      }
+
+      final passwordError = Validators.validatePassword(
+        _passwordController.text,
+      );
+      if (passwordError != null) {
+        _fieldErrors['password'] = passwordError;
+        _passwordFocus.requestFocus();
+        _showMessage(passwordError, success: false);
+        setState(() {});
+        return;
+      }
+    } else {
+      final emailError = Validators.validateEmail(_emailController.text);
+      if (emailError != null) {
+        _fieldErrors['email'] = emailError;
+        _emailFocus.requestFocus();
+        _showMessage(emailError, success: false);
+        setState(() {});
+        return;
+      }
+
+      final passwordError = Validators.validatePassword(
+        _passwordController.text,
+      );
+      if (passwordError != null) {
+        _fieldErrors['password'] = passwordError;
+        _passwordFocus.requestFocus();
+        _showMessage(passwordError, success: false);
+        setState(() {});
+        return;
+      }
     }
 
     setState(() => _isLoading = true);
@@ -111,12 +163,14 @@ class _AuthFormState extends ConsumerState<AuthForm> {
       if (widget.isSignIn) {
         final user = await ref.read(
           loginProvider({
-            'email': _emailController.text,
+            'email': _emailController.text.trim(),
             'password': _passwordController.text,
           }).future,
         );
 
         if (user.token == null) throw Exception('Login failed');
+
+        await SecureStorage.saveToken(user.token!);
 
         _showMessage('Welcome back, ${user.firstName}!');
 
@@ -131,7 +185,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
           registerProvider({
             'firstName': _firstNameController.text.trim(),
             'lastName': _lastNameController.text.trim(),
-            'email': _emailController.text,
+            'email': _emailController.text.trim(),
             'password': _passwordController.text,
             if (_phoneController.text.trim().isNotEmpty)
               'phone': _phoneController.text.trim(),
@@ -139,11 +193,13 @@ class _AuthFormState extends ConsumerState<AuthForm> {
         );
 
         _showMessage('Registered successfully, ${user.firstName}!');
+
         _firstNameController.clear();
         _lastNameController.clear();
         _emailController.clear();
         _passwordController.clear();
         _phoneController.clear();
+
         widget.onSignUpSuccess?.call();
       }
     } catch (e, stackTrace) {
@@ -182,6 +238,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
             currentFocus: _firstNameFocus,
             nextFocus: _lastNameFocus,
             visible: !widget.isSignIn,
+            errorText: _fieldErrors['firstName'],
           ),
 
           // Last Name
@@ -192,6 +249,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
             currentFocus: _lastNameFocus,
             nextFocus: _emailFocus,
             visible: !widget.isSignIn,
+            errorText: _fieldErrors['lastName'],
           ),
 
           // Email
@@ -202,6 +260,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
             currentFocus: _emailFocus,
             nextFocus: widget.isSignIn ? _passwordFocus : _phoneFocus,
             keyboardType: TextInputType.emailAddress,
+            errorText: _fieldErrors['email'],
           ),
 
           // Phone
@@ -213,6 +272,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
             nextFocus: _passwordFocus,
             keyboardType: TextInputType.phone,
             visible: !widget.isSignIn,
+            errorText: _fieldErrors['phone'],
           ),
 
           // Password
@@ -225,6 +285,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
             focusNode: _passwordFocus,
             textInputAction: TextInputAction.done,
             onSubmitted: (_) => _submit(),
+            errorText: _fieldErrors['password'],
             suffixIcon: IconButton(
               icon: Icon(
                 _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -299,6 +360,28 @@ class _AuthFormState extends ConsumerState<AuthForm> {
                     ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showMessage(String message, {bool success = true}) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final bgColor = success ? colorScheme.tertiary : colorScheme.error;
+    final textColor = success ? colorScheme.onTertiary : colorScheme.onError;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(color: textColor, fontSize: 14.sp),
+        ),
+        backgroundColor: bgColor,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(12.w),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

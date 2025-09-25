@@ -10,7 +10,8 @@ class AuthTextField extends StatelessWidget {
   final FocusNode? nextFocus;
   final TextInputType? keyboardType;
   final IconData icon;
-  final bool visible; // NEW
+  final bool visible;
+  final String? errorText; // ✅ NEW
 
   const AuthTextField({
     super.key,
@@ -21,7 +22,8 @@ class AuthTextField extends StatelessWidget {
     this.nextFocus,
     this.keyboardType,
     this.icon = Icons.person_outline,
-    this.visible = true, // default true
+    this.visible = true,
+    this.errorText, // ✅ NEW
   });
 
   @override
@@ -36,12 +38,13 @@ class AuthTextField extends StatelessWidget {
         focusNode: currentFocus,
         textInputAction:
             nextFocus != null ? TextInputAction.next : TextInputAction.done,
-        onSubmitted:
-            (_) =>
-                nextFocus != null
-                    ? FocusScope.of(context).requestFocus(nextFocus)
-                    : null,
+        onSubmitted: (_) {
+          if (nextFocus != null) {
+            FocusScope.of(context).requestFocus(nextFocus);
+          }
+        },
         keyboardType: keyboardType,
+        errorText: errorText, // ✅ pass down
       ),
     );
   }
