@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -8,7 +9,12 @@ class TextFieldWidget extends StatelessWidget {
   final bool obscureText;
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
-  final ValueChanged<String>? onChanged; // ✅ added
+  final ValueChanged<String>? onChanged;
+
+  // NEW: focus and keyboard navigation support
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
 
   const TextFieldWidget({
     super.key,
@@ -19,7 +25,10 @@ class TextFieldWidget extends StatelessWidget {
     this.obscureText = false,
     this.suffixIcon,
     this.keyboardType,
-    this.onChanged, // ✅ added
+    this.onChanged,
+    this.focusNode,
+    this.textInputAction,
+    this.onSubmitted,
   });
 
   @override
@@ -31,46 +40,51 @@ class TextFieldWidget extends StatelessWidget {
           label,
           style: TextStyle(
             color: Theme.of(context).colorScheme.onSurface,
-            fontSize: 14,
+            fontSize: 14.sp,
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         TextField(
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
-          onChanged: onChanged, // ✅ added
+          onChanged: onChanged,
+          focusNode: focusNode,
+          textInputAction: textInputAction,
+          onSubmitted: onSubmitted,
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle: TextStyle(fontSize: 14.sp),
             prefixIcon: Icon(
               icon,
+              size: 20.sp,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             suffixIcon: suffixIcon,
             filled: true,
             fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
                 color: Theme.of(context).colorScheme.outline,
               ),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
                 color: Theme.of(context).colorScheme.outline,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 16.w,
+              vertical: 16.h,
             ),
           ),
         ),

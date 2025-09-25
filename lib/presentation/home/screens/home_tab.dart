@@ -1,6 +1,7 @@
 import 'package:e_commerce_app/domain/categories/entities/category_entity.dart';
 import 'package:e_commerce_app/domain/product/entities/Product.dart';
 import 'package:e_commerce_app/presentation/products/providers/featuredProductsProvider.dart';
+import 'package:e_commerce_app/presentation/products/screens/products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -152,11 +153,18 @@ class HomeTab extends ConsumerWidget {
                           final CategoryEntity category = categories[index];
                           return GestureDetector(
                             onTap: () {
-                              // TODO: Navigate to Products Screen for this category
-                              // Navigator.push(context, MaterialPageRoute(
-                              //   builder: (_) => ProductsScreen(categoryId: category.id),
-                              // ));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => ProductsScreen(
+                                        categoryId: category.id,
+                                        categoryName: category.name,
+                                      ),
+                                ),
+                              );
                             },
+
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),

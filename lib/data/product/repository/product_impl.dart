@@ -16,4 +16,12 @@ class ProductRepositoryImpl implements ProductRepository {
     final data = response.data['data'] as List;
     return data.map((json) => ProductModel.fromJson(json)).toList();
   }
+
+  Future<List<ProductEntity>> getProductsByCategory(String categoryId) async {
+    final response = await dioClient.dio.get(
+      '/api/v1/products/category/$categoryId',
+    );
+    final data = response.data['data'] as List;
+    return data.map((json) => ProductModel.fromJson(json)).toList();
+  }
 }
