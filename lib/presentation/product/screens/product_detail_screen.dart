@@ -1,3 +1,4 @@
+import 'package:e_commerce_app/presentation/product/widgets/product_detail_shimmer_loading.dart';
 import 'package:e_commerce_app/presentation/cart/providers/cart_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_app/presentation/product/providers/product_detail_provider.dart';
@@ -257,7 +258,7 @@ class ProductDetailScreen extends ConsumerWidget {
             ],
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const ProductDetailShimmerLoading(),
         error: (error, _) => Center(child: Text('Error: $error')),
       ),
     );

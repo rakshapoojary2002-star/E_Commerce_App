@@ -1,5 +1,5 @@
-import '../entities/profile_entity.dart';
+import 'package:e_commerce_app/domain/profile/entities/user_profile.dart';
 
 abstract class ProfileRepository {
-  Future<ProfileEntity> getProfile(String token);
+  Future<UserProfile> getUserProfile();
 }

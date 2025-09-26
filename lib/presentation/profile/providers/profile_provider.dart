@@ -1,16 +1,38 @@
-import 'package:e_commerce_app/data/profile/repositories/profile_repository_impl.dart';
-import 'package:e_commerce_app/domain/profile/entities/profile_entity.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/network/dio_client.dart';
+import 'package:flutter/material.dart';
+import 'package:e_commerce_app/domain/profile/entities/user_profile.dart';
+import 'package:e_commerce_app/domain/profile/repositories/profile_repository.dart';
 
-final profileRepositoryProvider = Provider(
-  (ref) => ProfileRepositoryImpl(DioClient()),
-);
+enum ProfileState {
+  initial,
+  loading,
+  loaded,
+  error,
+}
 
-final profileProvider = FutureProvider.family<ProfileEntity, String>((
-  ref,
-  token,
-) async {
-  final repo = ref.watch(profileRepositoryProvider);
-  return repo.getProfile(token);
-});
+class ProfileProvider with ChangeNotifier {
+  final ProfileRepository profileRepository;
+
+  ProfileProvider({required this.profileRepository});
+
+  UserProfile? _userProfile;
+  UserProfile? get userProfile => _userProfile;
+
+  ProfileState _state = ProfileState.initial;
+  ProfileState get state => _state;
+
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
+  Future<void> fetchUserProfile() async {
+    _state = ProfileState.loading;
+    notifyListeners();
+    try {
+      _userProfile = await profileRepository.getUserProfile();
+      _state = ProfileState.loaded;
+    } catch (e) {
+      _errorMessage = e.toString();
+      _state = ProfileState.error;
+    }
+    notifyListeners();
+  }
+}

@@ -1,6 +1,6 @@
 import 'package:e_commerce_app/presentation/cart/screens/cart_tab.dart';
 import 'package:e_commerce_app/presentation/home/screens/home_tab.dart';
-import 'package:e_commerce_app/presentation/profile/screens/profile_tab.dart';
+import 'package:e_commerce_app/presentation/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _widgetOptions = <Widget>[
       HomeTab(),
       CartTab(),
-      ProfileTab(token: widget.token),
+      ProfileScreen(),
     ];
   }
 
