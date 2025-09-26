@@ -157,10 +157,11 @@ class HomeTab extends ConsumerWidget {
                         },
                       ),
                     ),
-                loading: () => const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: ShimmerLoading(),
-                ),
+                loading:
+                    () => const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: ShimmerLoading(),
+                    ),
                 error:
                     (error, _) => Center(
                       child: Text(
