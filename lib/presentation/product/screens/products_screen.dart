@@ -1,4 +1,4 @@
-import 'package:e_commerce_app/presentation/widgets/product_list_shimmer.dart';
+import 'package:e_commerce_app/presentation/product/widgets/product_list_shimmer.dart';
 import 'package:e_commerce_app/presentation/product/screens/product_detail_screen.dart';
 import 'package:e_commerce_app/domain/product/entities/product_entity.dart';
 import 'package:e_commerce_app/presentation/product/providers/products_provider.dart';
@@ -23,7 +23,12 @@ class ProductsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(categoryName, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+        title: Text(
+          categoryName,
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: theme.colorScheme.surface,
         elevation: 0,
@@ -45,8 +50,9 @@ class ProductsScreen extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          ProductDetailScreen(productId: product.id),
+                      builder:
+                          (context) =>
+                              ProductDetailScreen(productId: product.id),
                     ),
                   );
                 },
@@ -65,15 +71,17 @@ class ProductsScreen extends ConsumerWidget {
                         child: CachedNetworkImage(
                           imageUrl: product.imageUrl ?? '',
                           fit: BoxFit.cover,
-                          placeholder: (context, url) =>
-                              Container(color: Colors.grey.shade200),
-                          errorWidget: (context, url, error) => Container(
-                            color: Colors.grey.shade200,
-                            child: const Icon(
-                              Icons.image_not_supported,
-                              size: 40,
-                            ),
-                          ),
+                          placeholder:
+                              (context, url) =>
+                                  Container(color: Colors.grey.shade200),
+                          errorWidget:
+                              (context, url, error) => Container(
+                                color: theme.colorScheme.surfaceContainerLow,
+                                child: const Icon(
+                                  Icons.image_not_supported,
+                                  size: 40,
+                                ),
+                              ),
                         ),
                       ),
                       Expanded(

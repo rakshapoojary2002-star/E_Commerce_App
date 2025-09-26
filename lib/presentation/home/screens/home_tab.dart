@@ -1,4 +1,4 @@
-import 'package:e_commerce_app/presentation/widgets/shimmer_loading.dart';
+import 'package:e_commerce_app/presentation/profile/widgets/shimmer_loading.dart';
 import 'package:e_commerce_app/domain/categories/entities/category_entity.dart';
 import 'package:e_commerce_app/presentation/product/screens/products_screen.dart';
 import 'package:flutter/material.dart';
