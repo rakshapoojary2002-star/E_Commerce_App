@@ -22,20 +22,10 @@ class ProductListShimmer extends StatelessWidget {
               contentPadding: const EdgeInsets.all(12),
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  width: 80,
-                  height: 80,
-                  color: Colors.white,
-                ),
+                child: Container(width: 80, height: 80, color: Colors.white),
               ),
-              title: Container(
-                height: 20,
-                color: Colors.white,
-              ),
-              subtitle: Container(
-                height: 15,
-                color: Colors.white,
-              ),
+              title: Container(height: 20, color: Colors.white),
+              subtitle: Container(height: 15, color: Colors.white),
             ),
           );
         },
