@@ -33,14 +33,13 @@ class HomeTab extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Text(
-                  "Categories",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-
+              // const Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              //   child: Text(
+              //     "Categories",
+              //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              //   ),
+              // ),
               categoriesAsync.when(
                 data:
                     (categories) => Padding(
