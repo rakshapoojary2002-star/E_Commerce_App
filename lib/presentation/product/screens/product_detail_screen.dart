@@ -1,18 +1,31 @@
+import 'package:e_commerce_app/core/utils/utils.dart';
+import 'package:e_commerce_app/domain/cart/entities/cart_entity.dart';
+import 'package:e_commerce_app/presentation/cart/providers/cart_providers.dart';
+import 'package:e_commerce_app/presentation/cart/screens/single_item_checkout_screen.dart';
 import 'package:e_commerce_app/presentation/product/widgets/product_detail_shimmer_loading.dart';
-import 'package:e_commerce_app/presentation/cart/providers/cart_provider.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_app/presentation/product/providers/product_detail_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductDetailScreen extends ConsumerWidget {
+class ProductDetailScreen extends ConsumerStatefulWidget {
   final int productId;
 
   const ProductDetailScreen({super.key, required this.productId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final productAsync = ref.watch(productDetailProvider(productId));
+  ConsumerState<ProductDetailScreen> createState() =>
+      _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
+  int _quantity = 1;
+  bool _isProcessingPayment = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final productAsync = ref.watch(productDetailProvider(widget.productId));
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -24,8 +37,6 @@ class ProductDetailScreen extends ConsumerWidget {
       ),
       body: productAsync.when(
         data: (product) {
-          int quantity = 1;
-
           return Column(
             children: [
               Expanded(
@@ -42,12 +53,18 @@ class ProductDetailScreen extends ConsumerWidget {
                           height: 300,
                           placeholder:
                               (context, url) => Container(
-                                color: Colors.grey.shade200,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceContainerHigh,
                                 height: 300,
                               ),
                           errorWidget:
                               (context, url, error) => Container(
-                                color: Colors.grey.shade200,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceContainerHigh,
                                 height: 300,
                                 child: const Icon(
                                   Icons.image_not_supported,
@@ -78,7 +95,10 @@ class ProductDetailScreen extends ConsumerWidget {
                               Text(
                                 "by ${product.brand}",
                                 style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: Colors.grey[700],
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
                                   fontStyle: FontStyle.italic,
                                 ),
                               ),
@@ -102,7 +122,8 @@ class ProductDetailScreen extends ConsumerWidget {
                               children: [
                                 Icon(
                                   Icons.star,
-                                  color: Colors.amber.shade600,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   size: 20,
                                 ),
                                 const SizedBox(width: 4),
@@ -120,8 +141,12 @@ class ProductDetailScreen extends ConsumerWidget {
                                     color:
                                         product.stockQuantity != null &&
                                                 product.stockQuantity! > 0
-                                            ? Colors.green
-                                            : Colors.red,
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.tertiary
+                                            : Theme.of(
+                                              context,
+                                            ).colorScheme.error,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -141,7 +166,8 @@ class ProductDetailScreen extends ConsumerWidget {
                                 Container(
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Colors.grey.shade400,
+                                      color:
+                                          Theme.of(context).colorScheme.outline,
                                     ),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -151,19 +177,23 @@ class ProductDetailScreen extends ConsumerWidget {
                                       IconButton(
                                         icon: const Icon(Icons.remove),
                                         onPressed: () {
-                                          if (quantity > 1) {
-                                            quantity--;
+                                          if (_quantity > 1) {
+                                            setState(() {
+                                              _quantity--;
+                                            });
                                           }
                                         },
                                       ),
                                       Text(
-                                        "$quantity",
+                                        "$_quantity",
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                       IconButton(
                                         icon: const Icon(Icons.add),
                                         onPressed: () {
-                                          quantity++;
+                                          setState(() {
+                                            _quantity++;
+                                          });
                                         },
                                       ),
                                     ],
@@ -205,7 +235,9 @@ class ProductDetailScreen extends ConsumerWidget {
                   color: theme.colorScheme.surface,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.shadow.withOpacity(0.05),
                       blurRadius: 8,
                       offset: const Offset(0, -2),
                     ),
@@ -217,8 +249,8 @@ class ProductDetailScreen extends ConsumerWidget {
                       child: ElevatedButton.icon(
                         onPressed: () {
                           ref
-                              .read(cartProvider.notifier)
-                              .addToCart(product.id, 1);
+                              .read(cartNotifierProvider.notifier)
+                              .addToCart(product.id, _quantity);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Added to Cart")),
                           );
@@ -238,18 +270,46 @@ class ProductDetailScreen extends ConsumerWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // TODO: Buy now flow
+                          final item = CartItem(
+                            id: product.id,
+                            productId: product.id,
+                            name: product.name,
+                            price: product.price,
+                            quantity: _quantity,
+                            imageUrl: product.imageUrl,
+                          );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SingleItemCheckoutScreen(item: item),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          foregroundColor: Colors.white,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondary,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.onSecondary,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           textStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        child: const Text("Buy Now"),
+                        child:
+                            _isProcessingPayment
+                                ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation(
+                                      Colors.white,
+                                    ),
+                                  ),
+                                )
+                                : const Text("Buy Now"),
                       ),
                     ),
                   ],

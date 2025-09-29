@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../../../core/utils/flutter_secure.dart';
 import '../../../domain/auth/repositories/auth_repository.dart';
 import '../models/user_model.dart';
 import '../../../core/network/dio_client.dart';
@@ -71,10 +72,11 @@ class AuthRepositoryImpl implements AuthRepository {
         data: {"email": email.trim(), "password": password.trim()},
       );
 
-      debugPrint('Login raw response: ${response.data}');
-
       final userJson = response.data['data']['user'];
       final token = response.data['data']['token'];
+
+      await SecureStorage.saveToken(token);
+      print('Token stored: $token');
 
       return UserModel.fromJson(userJson, token: token);
     } on DioError catch (e) {
