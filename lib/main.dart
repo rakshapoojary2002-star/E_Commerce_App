@@ -1,10 +1,11 @@
 import 'package:e_commerce_app/core/theme/text_theme.dart';
+import 'package:e_commerce_app/core/theme/theme.dart';
 import 'package:e_commerce_app/core/utils/flutter_secure.dart';
 import 'package:e_commerce_app/presentation/auth/screens/auth_page.dart';
 import 'package:e_commerce_app/presentation/home/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:e_commerce_app/core/theme/theme.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {

@@ -18,12 +18,27 @@ dependencies:
   flutter_screenutil: ^5.9.3
   shimmer: ^3.0.0
   equatable: any
+  geolocator: ^13.0.1
+  permission_handler: ^11.3.1
 
   cupertino_icons: ^1.0.8
+  latlong2: ^0.9.1
+  google_maps_flutter: ^2.13.1
+  flutter_plugin_android_lifecycle: ^2.0.30
+  razorpay_sdk:
+    git:
+      url: https://github.com/NamithaNaik/Payment_Integration.git
+      path: packages/razorpay_sdk
+      ref: main   
+  trident_tracker:
+    git:
+      url: https://github.com/sha158/trident_tracker.git
+      ref: main     
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   flutter_lints: ^5.0.0
 

@@ -26,7 +26,7 @@ class ProductsScreen extends ConsumerWidget {
         title: Text(
           categoryName,
           style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+            //fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,

@@ -1,0 +1,2 @@
+#!/bin/bash
+curl -X PUT -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUxMmUyMTc3LWY2NjgtNGQwYS04NjFkLWU1MWM3YjEwMDE2NSIsImVtYWlsIjoiYW51YmF2YUBnbWFpbC5jb20iLCJpYXQiOjE3NTg4ODYxMTMsImV4cCI6MTc1OTQ5M' -H 'Content-Type: application/json' -d '{"quantity": 2}' https://tcommmerce.vercel.app/api/v1/cart/2
