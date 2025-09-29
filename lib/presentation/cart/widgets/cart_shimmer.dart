@@ -7,8 +7,8 @@ class CartShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
+      baseColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+      highlightColor: Theme.of(context).colorScheme.surfaceContainerLow,
       child: ListView.builder(
         itemCount: 3,
         itemBuilder: (context, index) {
@@ -24,17 +24,16 @@ class CartShimmer extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
                   width: 80,
-                  height: 80,
-                  color: Colors.white,
+color: Theme.of(context).colorScheme.surface,
                 ),
               ),
               title: Container(
                 height: 20,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface,
               ),
               subtitle: Container(
                 height: 15,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface,
               ),
             ),
           );

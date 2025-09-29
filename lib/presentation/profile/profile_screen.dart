@@ -164,7 +164,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.shadow.withOpacity(0.2),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -209,11 +211,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                     decoration: BoxDecoration(
                       color:
                           user.isActive
-                              ? Colors.green.withOpacity(0.1)
-                              : Colors.orange.withOpacity(0.1),
+                              ? Theme.of(
+                                context,
+                              ).colorScheme.tertiary.withOpacity(0.1)
+                              : Theme.of(
+                                context,
+                              ).colorScheme.secondary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20.r),
                       border: Border.all(
-                        color: user.isActive ? Colors.green : Colors.orange,
+                        color:
+                            user.isActive
+                                ? Theme.of(context).colorScheme.tertiary
+                                : Theme.of(context).colorScheme.secondary,
                         width: 1,
                       ),
                     ),
@@ -223,13 +232,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         Icon(
                           user.isActive ? Icons.check_circle : Icons.pending,
                           size: 12.w,
-                          color: user.isActive ? Colors.green : Colors.orange,
+                          color:
+                              user.isActive
+                                  ? Theme.of(context).colorScheme.tertiary
+                                  : Theme.of(context).colorScheme.secondary,
                         ),
                         SizedBox(width: 4.w),
                         Text(
                           user.isActive ? 'Active' : 'Inactive',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: user.isActive ? Colors.green : Colors.orange,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color:
+                                user.isActive
+                                    ? Theme.of(context).colorScheme.tertiary
+                                    : Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -525,7 +540,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
             ),
             ElevatedButton(
               onPressed: () async {
+                final token = await SecureStorage.getToken();
+                print('Token before logout: $token');
                 await SecureStorage.clearToken();
+                print('Token cleared');
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => AuthPage()),
                   (Route<dynamic> route) => false,

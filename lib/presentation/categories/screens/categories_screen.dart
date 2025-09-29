@@ -49,10 +49,11 @@ class CategoriesScreen extends ConsumerWidget {
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(
+                                    return Icon(
                                       Icons.broken_image,
                                       size: 50,
-                                      color: Colors.grey,
+                                      color:
+                                          Theme.of(context).colorScheme.outline,
                                     );
                                   },
                                   loadingBuilder: (
@@ -67,10 +68,10 @@ class CategoriesScreen extends ConsumerWidget {
                                   },
                                 ),
                               )
-                              : const Icon(
+                              : Icon(
                                 Icons.category,
                                 size: 50,
-                                color: Colors.grey,
+                                color: Theme.of(context).colorScheme.outline,
                               ),
                     ),
 

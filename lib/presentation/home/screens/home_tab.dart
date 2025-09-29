@@ -15,14 +15,9 @@ class HomeTab extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Shop by Category',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-        ),
+        title: const Text('Shop by Category'),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -75,15 +70,15 @@ class HomeTab extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(20),
                                 gradient: LinearGradient(
                                   colors: [
-                                    Colors.orange.shade50,
-                                    Colors.orange.shade100,
+                                    Theme.of(context).colorScheme.primaryContainer,
+                                    Theme.of(context).colorScheme.primary,
                                   ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.06),
+                                    color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
                                     blurRadius: 10,
                                     offset: const Offset(0, 5),
                                   ),
@@ -102,11 +97,11 @@ class HomeTab extends ConsumerWidget {
                                         fit: BoxFit.cover,
                                         placeholder:
                                             (context, url) => Container(
-                                              color: Colors.grey.shade200,
+                                              color: Theme.of(context).colorScheme.surfaceVariant,
                                             ),
                                         errorWidget:
                                             (context, url, error) => Container(
-                                              color: Colors.grey.shade200,
+                                              color: Theme.of(context).colorScheme.surfaceVariant,
                                               child: const Icon(
                                                 Icons.image_not_supported,
                                                 size: 48,
@@ -123,10 +118,7 @@ class HomeTab extends ConsumerWidget {
                                       children: [
                                         Text(
                                           category.name,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -138,10 +130,7 @@ class HomeTab extends ConsumerWidget {
                                             ),
                                             child: Text(
                                               category.description!,
-                                              style: TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.grey.shade700,
-                                              ),
+                                              style: Theme.of(context).textTheme.bodyMedium,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                             ),

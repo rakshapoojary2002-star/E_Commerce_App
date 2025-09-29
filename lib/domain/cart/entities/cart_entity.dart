@@ -1,15 +1,23 @@
-import 'package:e_commerce_app/domain/product/entities/product_entity.dart';
+class Cart {
+  final List<CartItem> items;
 
-class CartItemEntity {
-  final ProductEntity product;
-  final int quantity;
-
-  CartItemEntity({required this.product, required this.quantity});
+  Cart({required this.items});
 }
 
-class CartEntity {
-  final List<CartItemEntity> items;
-  final double totalPrice;
+class CartItem {
+  final int id;
+  final int productId;
+  final int quantity;
+  final String name;
+  final double price;
+  final String? imageUrl;
 
-  CartEntity({required this.items, required this.totalPrice});
+  CartItem({
+    required this.id,
+    required this.productId,
+    required this.quantity,
+    required this.name,
+    required this.price,
+    this.imageUrl,
+  });
 }
