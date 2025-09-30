@@ -69,4 +69,10 @@ class Validators {
     }
     return null;
   }
+
+  /// Validate login password
+  static String? validateLoginPassword(String value) {
+    if (value.isEmpty) return 'Password is required';
+    return null;
+  }
 }

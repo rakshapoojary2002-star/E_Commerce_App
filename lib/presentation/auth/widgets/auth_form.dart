@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:e_commerce_app/core/error/exceptions.dart';
 import 'package:e_commerce_app/core/utils/flutter_secure.dart';
 import 'package:e_commerce_app/core/utils/validators.dart';
 import 'package:e_commerce_app/presentation/auth/providers/auth_provider.dart';
@@ -145,7 +147,7 @@ class _AuthFormState extends ConsumerState<AuthForm> {
         return;
       }
 
-      final passwordError = Validators.validatePassword(
+      final passwordError = Validators.validateLoginPassword(
         _passwordController.text,
       );
       if (passwordError != null) {
@@ -202,11 +204,27 @@ class _AuthFormState extends ConsumerState<AuthForm> {
 
         widget.onSignUpSuccess?.call();
       }
+    } on ServerException catch (e) {
+      if (e.statusCode == 409) { // Email already exists
+        _fieldErrors['email'] = e.message;
+        _emailFocus.requestFocus();
+        _showMessage(e.message, success: false);
+      } else if (e.statusCode == 401) { // Invalid credentials
+        _showMessage(e.message, success: false);
+      } else if (e.statusCode == 400) { // Validation error from backend
+        _showMessage(e.message, success: false);
+      } else {
+        _showMessage('An unexpected error occurred. Please try again.', success: false);
+      }
+    } on SocketException {
+      _showMessage('No internet connection. Please check your network.', success: false);
     } catch (e, stackTrace) {
       debugPrint('Auth error: $e\n$stackTrace');
-      _showMessage('Error: ${e.toString()}', success: false);
+      _showMessage('An unexpected error occurred. Please try again.', success: false);
     } finally {
-      setState(() => _isLoading = false);
+      if(mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -335,6 +353,8 @@ class _AuthFormState extends ConsumerState<AuthForm> {
             style: ElevatedButton.styleFrom(
               backgroundColor: colorScheme.tertiary,
               foregroundColor: colorScheme.onTertiary,
+              disabledBackgroundColor: colorScheme.tertiary.withOpacity(0.5),
+              disabledForegroundColor: colorScheme.onTertiary,
               padding: EdgeInsets.symmetric(vertical: 14.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),

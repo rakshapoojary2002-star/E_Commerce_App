@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../../../core/error/exceptions.dart';
 import '../../../core/utils/flutter_secure.dart';
 import '../../../domain/auth/repositories/auth_repository.dart';
 import '../models/user_model.dart';
@@ -42,21 +43,12 @@ class AuthRepositoryImpl implements AuthRepository {
       return UserModel.fromJson(userJson, token: token);
     } on DioError catch (e) {
       if (e.response != null) {
-        debugPrint('DioError response data: ${e.response!.data}');
-        debugPrint('DioError status code: ${e.response!.statusCode}');
-        debugPrint('DioError headers: ${e.response!.headers}');
-
-        try {
-          final msg = e.response!.data['message'];
-          throw Exception(msg ?? 'Registration failed');
-        } catch (_) {
-          throw Exception(
-            'Registration failed. Status code: ${e.response!.statusCode}',
-          );
-        }
+        throw ServerException(
+          message: e.response!.data['message'] ?? 'Registration failed',
+          statusCode: e.response!.statusCode,
+        );
       } else {
-        debugPrint('DioError without response: $e');
-        throw Exception('Registration failed. No response from server.');
+        throw ServerException(message: 'Registration failed. No response from server.');
       }
     }
   }
@@ -80,8 +72,14 @@ class AuthRepositoryImpl implements AuthRepository {
 
       return UserModel.fromJson(userJson, token: token);
     } on DioError catch (e) {
-      debugPrint('DioError response: ${e.response?.data}');
-      throw Exception(e.response?.data['message'] ?? 'Login failed');
+      if (e.response != null) {
+        throw ServerException(
+          message: e.response!.data['message'] ?? 'Login failed',
+          statusCode: e.response!.statusCode,
+        );
+      } else {
+        throw ServerException(message: 'Login failed. No response from server.');
+      }
     }
   }
 }

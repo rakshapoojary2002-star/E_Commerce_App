@@ -26,7 +26,7 @@ class CartScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.delete_sweep_outlined),
+            icon: Icon(Icons.delete_sweep_outlined, color: theme.colorScheme.error),
             onPressed: () async {
               final confirmed = await showConfirmationDialog(context);
               if (confirmed == true) {

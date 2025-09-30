@@ -72,8 +72,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      const Color(0xff31628d), // Your custom primary
-                      const Color(0xffcfe5ff), // Your custom primaryContainer
+                      colorScheme.primary,
+                      colorScheme.primaryContainer,
                     ],
                   ),
                 ),
@@ -86,9 +86,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         width: 150,
                         height: 150,
                         decoration: BoxDecoration(
-                          color: const Color(
-                            0xff9dcbfb,
-                          ).withOpacity(0.2), // Your primary variant
+                          color: colorScheme.inversePrimary.withOpacity(0.2),
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -100,9 +98,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         width: 100,
                         height: 100,
                         decoration: BoxDecoration(
-                          color: const Color(
-                            0xff124a73,
-                          ).withOpacity(0.15), // Your darker primary
+                          color: colorScheme.primaryContainer.withOpacity(0.15),
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -116,7 +112,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                 onPressed: () {
                   // Settings or edit profile
                 },
-                icon: Icon(Icons.settings, color: colorScheme.onPrimary),
+                icon: Icon(Icons.settings, color: colorScheme.primary),
               ),
             ],
           ),
@@ -174,20 +170,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                       ),
                       child: CircleAvatar(
                         radius: 60.w,
-                        backgroundColor: const Color(
-                          0xfffaf8ff,
-                        ), // Your surface color
+                        backgroundColor: colorScheme.surface,
                         child: CircleAvatar(
                           radius: 55.w,
-                          backgroundColor: const Color(
-                            0xffcfe5ff,
-                          ), // Your primaryContainer
+                          backgroundColor: colorScheme.primaryContainer,
                           child: Icon(
                             Icons.person,
                             size: 50.w,
-                            color: const Color(
-                              0xff124a73,
-                            ), // Your onPrimaryContainer
+                            color: colorScheme.onPrimaryContainer,
                           ),
                         ),
                       ),
@@ -275,21 +265,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         user.phone?.isNotEmpty == true
                             ? user.phone!
                             : 'Not provided',
-                    color: const Color(0xff31628d), // Your primary blue
+                    color: colorScheme.primary, // Your primary blue
                   ),
                   SizedBox(height: 12.h),
                   _buildInfoCard(
                     icon: Icons.calendar_today_rounded,
                     title: 'Member Since',
                     value: _formatDate(user.createdAt),
-                    color: const Color(0xff6c5e0f), // Your secondary yellow
+                    color: colorScheme.primary,
                   ),
                   SizedBox(height: 12.h),
                   _buildInfoCard(
                     icon: Icons.update_rounded,
                     title: 'Last Updated',
                     value: _formatDate(user.updatedAt),
-                    color: const Color(0xff2c6a46), // Your tertiary green
+                    color: colorScheme.primary,
                   ),
                   SizedBox(height: 32.h),
 
@@ -317,18 +307,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: const Color(0xfff4f3fa), // Your surfaceContainerLow
+        color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: const Color(
-            0xffd4c4b5,
-          ).withOpacity(0.5), // Your outlineVariant
+          color: colorScheme.outlineVariant.withOpacity(0.5),
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(
-              0xff827568,
-            ).withOpacity(0.08), // Your outline with opacity
+            color: colorScheme.outline.withOpacity(0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -393,10 +379,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff31628d), // Your primary
-              foregroundColor: const Color(0xffffffff), // Your onPrimary
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
               elevation: 2,
-              shadowColor: const Color(0xff31628d).withOpacity(0.3),
+              shadowColor: colorScheme.primary.withOpacity(0.3),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
               ),
@@ -409,20 +395,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
         SizedBox(
           width: double.infinity,
           height: 56.h,
-          child: OutlinedButton.icon(
+          child: OutlinedButton(
             onPressed: () {
               _showLogoutDialog();
             },
-            icon: Icon(Icons.logout_rounded),
-            label: Text(
+            child: Text(
               'Logout',
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
             ),
             style: OutlinedButton.styleFrom(
-              foregroundColor: const Color(0xffba1a1a), // Your error color
-              side: const BorderSide(
-                color: Color(0xffba1a1a),
-              ), // Your error color
+              foregroundColor: colorScheme.error,
+              side: BorderSide(
+                color: colorScheme.error,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
               ),
@@ -445,7 +430,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           Icon(
             Icons.error_outline_rounded,
             size: 64.w,
-            color: const Color(0xffba1a1a), // Your error color
+            color: colorScheme.error,
           ),
           SizedBox(height: 16.h),
           Text(
@@ -459,7 +444,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           Text(
             errorMessage ?? 'Unable to load profile data',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: const Color(0xff504539), // Your onSurfaceVariant
+              color: colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,
           ),
@@ -468,7 +453,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
             onPressed: () {
               ref.read(profileScreenProvider).fetchUserProfile();
             },
-            icon: Icon(Icons.refresh_rounded),
+            icon: Icon(Icons.refresh_rounded, color: colorScheme.primary),
             label: Text('Try Again'),
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
@@ -491,7 +476,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           Icon(
             Icons.person_off_rounded,
             size: 64.w,
-            color: const Color(0xff504539), // Your onSurfaceVariant
+            color: colorScheme.onSurfaceVariant,
           ),
           SizedBox(height: 16.h),
           Text(
@@ -505,7 +490,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           Text(
             'Profile information is not available at the moment',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: const Color(0xff504539), // Your onSurfaceVariant
+              color: colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,
           ),
@@ -525,13 +510,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.r),
           ),
-          title: Row(
-            children: [
-              Icon(Icons.logout_rounded, color: colorScheme.error),
-              SizedBox(width: 8.w),
-              Text('Logout'),
-            ],
-          ),
+          title: Text('Logout'),
           content: Text('Are you sure you want to logout?'),
           actions: [
             TextButton(
@@ -550,8 +529,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xffba1a1a), // Your error color
-                foregroundColor: const Color(0xffffffff), // Your onError
+                backgroundColor: colorScheme.error,
+                foregroundColor: colorScheme.onError,
               ),
               child: Text('Logout'),
             ),

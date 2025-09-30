@@ -15,7 +15,12 @@ class HomeTab extends ConsumerWidget {
     final categoriesAsync = ref.watch(categoriesProvider);
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        scrolledUnderElevation: 0,
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         title: const Text('Shop by Category'),
         centerTitle: true,
         elevation: 0,
@@ -30,13 +35,6 @@ class HomeTab extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // const Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              //   child: Text(
-              //     "Categories",
-              //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              //   ),
-              // ),
               categoriesAsync.when(
                 data:
                     (categories) => Padding(
@@ -72,7 +70,9 @@ class HomeTab extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(20),
                                 gradient: LinearGradient(
                                   colors: [
-                                    Theme.of(context).colorScheme.primaryContainer,
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.primaryContainer,
                                     Theme.of(context).colorScheme.primary,
                                   ],
                                   begin: Alignment.topLeft,
@@ -80,7 +80,9 @@ class HomeTab extends ConsumerWidget {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.shadow.withOpacity(0.1),
                                     blurRadius: 10,
                                     offset: const Offset(0, 5),
                                   ),
@@ -99,11 +101,17 @@ class HomeTab extends ConsumerWidget {
                                         fit: BoxFit.cover,
                                         placeholder:
                                             (context, url) => Container(
-                                              color: Theme.of(context).colorScheme.surfaceVariant,
+                                              color:
+                                                  Theme.of(
+                                                    context,
+                                                  ).colorScheme.surfaceVariant,
                                             ),
                                         errorWidget:
                                             (context, url, error) => Container(
-                                              color: Theme.of(context).colorScheme.surfaceVariant,
+                                              color:
+                                                  Theme.of(
+                                                    context,
+                                                  ).colorScheme.surfaceVariant,
                                               child: const Icon(
                                                 Icons.image_not_supported,
                                                 size: 48,
@@ -120,7 +128,11 @@ class HomeTab extends ConsumerWidget {
                                       children: [
                                         Text(
                                           category.name,
-                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.titleMedium?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -132,7 +144,10 @@ class HomeTab extends ConsumerWidget {
                                             ),
                                             child: Text(
                                               category.description!,
-                                              style: Theme.of(context).textTheme.bodyMedium,
+                                              style:
+                                                  Theme.of(
+                                                    context,
+                                                  ).textTheme.bodyMedium,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                             ),

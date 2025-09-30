@@ -1,8 +1,6 @@
 import 'package:e_commerce_app/core/theme/text_theme.dart';
 import 'package:e_commerce_app/core/theme/theme.dart';
-import 'package:e_commerce_app/core/utils/flutter_secure.dart';
-import 'package:e_commerce_app/presentation/auth/screens/auth_page.dart';
-import 'package:e_commerce_app/presentation/home/screens/home_screen.dart';
+import 'package:e_commerce_app/presentation/splash/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,15 +9,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 🔹 Check token from secure storage
-  final token = await SecureStorage.getToken();
-
-  runApp(ProviderScope(child: MyApp(initialToken: token)));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
-  final String? initialToken;
-  const MyApp({super.key, this.initialToken});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,11 +30,7 @@ class MyApp extends ConsumerWidget {
           theme: materialTheme.light(),
           darkTheme: materialTheme.dark(),
           themeMode: ThemeMode.system,
-          // 🔹 If token exists → go to HomeScreen, else AuthPage
-          home:
-              initialToken != null
-                  ? HomeScreen(token: initialToken!)
-                  : AuthPage(),
+          home: const SplashScreen(),
           debugShowCheckedModeBanner: false,
         );
       },

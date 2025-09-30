@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_app/presentation/product/providers/product_detail_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProductDetailScreen extends ConsumerStatefulWidget {
   final int productId;
@@ -252,7 +253,24 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                               .read(cartNotifierProvider.notifier)
                               .addToCart(product.id, _quantity);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Added to Cart")),
+                            SnackBar(
+                              content: Text(
+                                "Added to Cart",
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              behavior: SnackBarBehavior.floating,
+                              margin: EdgeInsets.all(12.w),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.r),
+                              ),
+                              duration: const Duration(seconds: 2),
+                            ),
                           );
                         },
                         icon: const Icon(Icons.add_shopping_cart),
@@ -281,16 +299,17 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  SingleItemCheckoutScreen(item: item),
+                              builder:
+                                  (context) =>
+                                      SingleItemCheckoutScreen(item: item),
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.primary,
                           foregroundColor:
-                              Theme.of(context).colorScheme.onSecondary,
+                              Theme.of(context).colorScheme.onPrimary,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           textStyle: const TextStyle(
                             fontSize: 16,
@@ -299,13 +318,13 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                         ),
                         child:
                             _isProcessingPayment
-                                ? const SizedBox(
+                                ? SizedBox(
                                   height: 20,
                                   width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation(
-                                      Colors.white,
+                                      theme.colorScheme.onPrimary,
                                     ),
                                   ),
                                 )
