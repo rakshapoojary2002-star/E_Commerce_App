@@ -1,8 +1,12 @@
 import 'package:e_commerce_app/domain/cart/entities/cart_entity.dart';
 import 'package:e_commerce_app/presentation/cart/providers/cart_providers.dart';
+import 'package:e_commerce_app/presentation/tracking/tracking.dart';
 import 'package:e_commerce_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as map;
+import 'package:permission_handler/permission_handler.dart';
 
 class SingleItemCheckoutScreen extends ConsumerStatefulWidget {
   final CartItem item;
@@ -45,6 +49,38 @@ class _SingleItemCheckoutScreenState
         });
       },
     );
+  }
+
+  void _trackLocation() async {
+    final status = await Permission.location.request();
+    if (status.isGranted) {
+      try {
+        const LocationSettings locationSettings = LocationSettings(
+          accuracy: LocationAccuracy.high,
+        );
+        Position position = await Geolocator.getCurrentPosition(
+          locationSettings: locationSettings,
+        );
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => DeliveryTrackingScreen(
+                    startPoint: map.LatLng(
+                      position.latitude,
+                      position.longitude,
+                    ),
+                  ),
+            ),
+          );
+        }
+      } catch (e) {
+        // Handle exceptions
+      }
+    } else {
+      // Handle permission denied
+    }
   }
 
   @override
@@ -244,6 +280,24 @@ class _SingleItemCheckoutScreenState
                             'Thank you for your purchase',
                             style: theme.textTheme.bodyLarge?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+                          ElevatedButton.icon(
+                            onPressed: _trackLocation,
+                            icon: const Icon(Icons.location_on),
+                            label: const Text('Track Location'),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Theme.of(context).primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32,
+                                vertical: 12,
+                              ),
                             ),
                           ),
                         ],
