@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:e_commerce_app/core/providers/profile_providers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:e_commerce_app/presentation/profile/screens/saved_addresses_screen.dart';
 import 'package:e_commerce_app/presentation/profile/widgets/profile_shimmer_loading.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -71,10 +72,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      colorScheme.primary,
-                      colorScheme.primaryContainer,
-                    ],
+                    colors: [colorScheme.primary, colorScheme.primaryContainer],
                   ),
                 ),
                 child: Stack(
@@ -281,6 +279,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                     value: _formatDate(user.updatedAt),
                     color: colorScheme.primary,
                   ),
+                  SizedBox(height: 12.h),
+                  _buildInfoCard(
+                    icon: Icons.location_on_outlined,
+                    title: 'Saved Addresses',
+                    value: 'Manage your saved addresses',
+                    color: colorScheme.primary,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SavedAddressesScreen(),
+                        ),
+                      );
+                    },
+                  ),
+
                   SizedBox(height: 32.h),
 
                   // Action Buttons
@@ -300,60 +314,70 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
     required String title,
     required String value,
     required Color color,
+    VoidCallback? onTap,
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withOpacity(0.5),
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: colorScheme.outlineVariant.withOpacity(0.5),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.outline.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.outline.withOpacity(0.08),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12.r),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Icon(icon, color: color, size: 24.w),
             ),
-            child: Icon(icon, color: color, size: 24.w),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w500,
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  value,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
+                  SizedBox(height: 2.h),
+                  Text(
+                    value,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            if (onTap != null)
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 16.w,
+                color: colorScheme.onSurfaceVariant,
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -405,9 +429,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
             ),
             style: OutlinedButton.styleFrom(
               foregroundColor: colorScheme.error,
-              side: BorderSide(
-                color: colorScheme.error,
-              ),
+              side: BorderSide(color: colorScheme.error),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
               ),

@@ -2,6 +2,7 @@ import 'package:e_commerce_app/core/utils/utils.dart';
 import 'package:e_commerce_app/domain/cart/entities/cart_entity.dart';
 import 'package:e_commerce_app/presentation/cart/providers/cart_providers.dart';
 import 'package:e_commerce_app/presentation/cart/screens/single_item_checkout_screen.dart';
+import 'package:e_commerce_app/presentation/cart/widgets/cart_icon.dart';
 import 'package:e_commerce_app/presentation/product/widgets/product_detail_shimmer_loading.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -35,6 +36,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
         centerTitle: true,
         backgroundColor: theme.colorScheme.surface,
         elevation: 0,
+        actions: const [CartIcon()],
       ),
       body: productAsync.when(
         data: (product) {

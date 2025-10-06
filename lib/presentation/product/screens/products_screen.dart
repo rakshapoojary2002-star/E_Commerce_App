@@ -4,6 +4,7 @@ import 'package:e_commerce_app/domain/product/entities/product_entity.dart';
 import 'package:e_commerce_app/presentation/product/providers/products_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:e_commerce_app/presentation/cart/widgets/cart_icon.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ProductsScreen extends ConsumerWidget {
@@ -32,6 +33,7 @@ class ProductsScreen extends ConsumerWidget {
         centerTitle: true,
         backgroundColor: theme.colorScheme.surface,
         elevation: 0,
+        actions: const [CartIcon()],
       ),
       body: productsAsync.when(
         data: (products) {
