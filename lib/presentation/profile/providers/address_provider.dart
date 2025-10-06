@@ -50,6 +50,13 @@ class AddressNotifier extends StateNotifier<AddressState> {
 
   Future<void> update(Address address) async {
     try {
+      if (address.isDefault) {
+        for (var i = 0; i < addresses.length; i++) {
+          if (addresses[i].isDefault) {
+            await updateAddress(addresses[i].copyWith(isDefault: false));
+          }
+        }
+      }
       await updateAddress(address);
       await fetchAddresses();
     } catch (e) {

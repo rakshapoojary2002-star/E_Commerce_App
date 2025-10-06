@@ -87,7 +87,6 @@ class CartNotifier extends StateNotifier<AsyncValue<Cart?>> {
 
   Future<void> getCart() async {
     state = const AsyncValue.loading();
-    await Future.delayed(const Duration(seconds: 2));
     try {
       final cart = await _getCartUseCase.execute();
       state = AsyncValue.data(cart);

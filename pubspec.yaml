@@ -32,6 +32,7 @@ dependencies:
     git:
       url: https://github.com/sha158/trident_tracker.git
       ref: main
+  flutter_animate: ^4.5.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,3 +1,4 @@
+import 'package:e_commerce_app/data/profile/models/address_model.dart';
 import 'package:e_commerce_app/domain/cart/entities/cart_entity.dart';
 import 'package:e_commerce_app/presentation/cart/providers/cart_providers.dart';
 import 'package:e_commerce_app/presentation/tracking/tracking.dart';
@@ -10,8 +11,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 class CheckoutScreen extends ConsumerStatefulWidget {
   final List<CartItem> items;
+  final Address address;
 
-  const CheckoutScreen({super.key, required this.items});
+  const CheckoutScreen({super.key, required this.items, required this.address});
 
   @override
   ConsumerState<CheckoutScreen> createState() => _CheckoutScreenState();
@@ -103,6 +105,47 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 16),
+                  Text(
+                    'Shipping Address',
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.shadow.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.address.street,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '${widget.address.city}, ${widget.address.state} ${widget.address.zipCode}',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   Text(
                     'Order Summary',
                     style: theme.textTheme.headlineSmall?.copyWith(

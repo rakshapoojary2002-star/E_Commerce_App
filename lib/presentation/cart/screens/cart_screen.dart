@@ -1,17 +1,119 @@
 import 'package:e_commerce_app/core/widgets/confirmation_dialog.dart';
+import 'package:e_commerce_app/data/profile/models/address_model.dart';
 import 'package:e_commerce_app/presentation/cart/providers/cart_providers.dart';
 import 'package:e_commerce_app/presentation/cart/screens/checkout_screen.dart';
 import 'package:e_commerce_app/presentation/cart/screens/single_item_checkout_screen.dart';
 import 'package:e_commerce_app/presentation/cart/widgets/cart_shimmer.dart';
+import 'package:e_commerce_app/presentation/profile/providers/address_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CartScreen extends ConsumerWidget {
+class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends ConsumerState<CartScreen> {
+  Address? _selectedAddress;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      await ref.read(addressNotifierProvider.notifier).fetchAddresses();
+      final addresses = ref.read(addressNotifierProvider.notifier).addresses;
+      if (addresses.isNotEmpty) {
+        final defaultAddress = addresses.firstWhere((a) => a.isDefault, orElse: () => addresses.first);
+        setState(() {
+          _selectedAddress = defaultAddress;
+        });
+      }
+    });
+  }
+
+  void _showAddressSelectionBottomSheet(BuildContext context, List<Address> addresses) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: false,
+          snap: true,
+          snapSizes: const [0.5, 1.0],
+          initialChildSize: 0.5,
+          minChildSize: 0.5,
+          maxChildSize: 1.0,
+          builder: (context, scrollController) {
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Select Delivery Address',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    controller: scrollController,
+                    itemCount: addresses.length,
+                    itemBuilder: (context, index) {
+                      final address = addresses[index];
+                      return RadioListTile<Address>(
+                        title: Text(address.street),
+                        subtitle: Text('${address.city}, ${address.state} ${address.zipCode}'),
+                        value: address,
+                        groupValue: _selectedAddress,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedAddress = value;
+                          });
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      // TODO: Implement use current location
+                    },
+                    icon: const Icon(Icons.my_location),
+                    label: const Text('Use my current location'),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 48),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final cartState = ref.watch(cartNotifierProvider);
+    final addressState = ref.watch(addressNotifierProvider);
+    final addresses = ref.watch(addressNotifierProvider.notifier).addresses;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -76,6 +178,52 @@ class CartScreen extends ConsumerWidget {
           return SafeArea(
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Deliver to:',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => _showAddressSelectionBottomSheet(context, addresses),
+                            child: Text(_selectedAddress != null ? 'Change' : 'Select an address'),
+                          ),
+                        ],
+                      ),
+                      if (_selectedAddress != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _selectedAddress!.street,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${_selectedAddress!.city}, ${_selectedAddress!.state} ${_selectedAddress!.zipCode}',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
                 // Cart items list
                 Expanded(
                   child: Consumer(
@@ -214,7 +362,7 @@ class CartScreen extends ConsumerWidget {
                                                       BorderRadius.circular(6),
                                                 ),
                                                 child: Text(
-                                                  '\$${item.price.toStringAsFixed(2)} each',
+                                                  '${item.price.toStringAsFixed(2)} each',
                                                   style: theme
                                                       .textTheme
                                                       .bodySmall
@@ -230,7 +378,7 @@ class CartScreen extends ConsumerWidget {
                                               ),
                                               const SizedBox(height: 8),
                                               Text(
-                                                'Subtotal: \$${(item.price * item.quantity).toStringAsFixed(2)}',
+                                                'Subtotal: ${(item.price * item.quantity).toStringAsFixed(2)}',
                                                 style: theme
                                                     .textTheme
                                                     .titleSmall
@@ -521,7 +669,7 @@ class CartScreen extends ConsumerWidget {
                               ),
                             ),
                             Text(
-                              '\$${cart.items.fold<double>(0, (sum, item) => sum + item.price * item.quantity).toStringAsFixed(2)}',
+                              '${cart.items.fold<double>(0, (sum, item) => sum + item.price * item.quantity).toStringAsFixed(2)}',
                               style: theme.textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.w700,
                                 color: theme.colorScheme.primary,
@@ -534,14 +682,30 @@ class CartScreen extends ConsumerWidget {
                           width: double.infinity,
                           child: FilledButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) =>
-                                          CheckoutScreen(items: cart.items),
-                                ),
-                              );
+                              if (_selectedAddress == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text('Please select an address.'),
+                                    backgroundColor: theme.colorScheme.error,
+                                    behavior: SnackBarBehavior.floating,
+                                    margin: const EdgeInsets.all(12),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => CheckoutScreen(
+                                          items: cart.items,
+                                          address: _selectedAddress!,
+                                        ),
+                                  ),
+                                );
+                              }
                             },
                             style: FilledButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),

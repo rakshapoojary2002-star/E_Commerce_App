@@ -22,8 +22,8 @@ class ProductDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
-  int _quantity = 1;
   bool _isProcessingPayment = false;
+  bool _isAddingToCart = false;
 
   @override
   Widget build(BuildContext context) {
@@ -158,55 +158,6 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
 
                             const SizedBox(height: 20),
 
-                            // Quantity Selector
-                            Row(
-                              children: [
-                                const Text(
-                                  "Quantity:",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                const SizedBox(width: 12),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color:
-                                          Theme.of(context).colorScheme.outline,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.remove),
-                                        onPressed: () {
-                                          if (_quantity > 1) {
-                                            setState(() {
-                                              _quantity--;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                      Text(
-                                        "$_quantity",
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.add),
-                                        onPressed: () {
-                                          setState(() {
-                                            _quantity++;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 20),
-
                             // Description
                             const Text(
                               "Description",
@@ -251,32 +202,59 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     children: [
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: () {
-                            ref
-                                .read(cartNotifierProvider.notifier)
-                                .addToCart(product.id, _quantity);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "Added to Cart",
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                    fontSize: 14.sp,
-                                  ),
-                                ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.all(12.w),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.r),
-                                ),
-                                duration: const Duration(seconds: 2),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.add_shopping_cart),
+                          onPressed:
+                              _isAddingToCart
+                                  ? null
+                                  : () async {
+                                    setState(() {
+                                      _isAddingToCart = true;
+                                    });
+                                    await ref
+                                        .read(cartNotifierProvider.notifier)
+                                        .addToCart(product.id, 1);
+                                    setState(() {
+                                      _isAddingToCart = false;
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          "Added to Cart",
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.onPrimary,
+                                            fontSize: 14.sp,
+                                          ),
+                                        ),
+                                        backgroundColor:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
+                                        behavior: SnackBarBehavior.floating,
+                                        margin: EdgeInsets.all(12.w),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            16.r,
+                                          ),
+                                        ),
+                                        duration: const Duration(seconds: 2),
+                                      ),
+                                    );
+                                  },
+                          icon:
+                              _isAddingToCart
+                                  ? Container(
+                                    width: 24,
+                                    height: 24,
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: CircularProgressIndicator(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      strokeWidth: 3,
+                                    ),
+                                  )
+                                  : const Icon(Icons.add_shopping_cart),
                           label: const Text("Add to Cart"),
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 14),
@@ -296,7 +274,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                               productId: product.id,
                               name: product.name,
                               price: product.price,
-                              quantity: _quantity,
+                              quantity: 1,
                               imageUrl: product.imageUrl,
                             );
                             Navigator.push(
@@ -327,7 +305,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation(
-                                        theme.colorScheme.onPrimary,
+                                        theme.colorScheme.primary,
                                       ),
                                     ),
                                   )

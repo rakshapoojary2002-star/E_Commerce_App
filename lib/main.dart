@@ -1,6 +1,6 @@
 import 'package:e_commerce_app/core/theme/text_theme.dart';
 import 'package:e_commerce_app/core/theme/theme.dart';
-import 'package:e_commerce_app/presentation/splash/splash.dart';
+import 'package:e_commerce_app/presentation/splash/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +30,7 @@ class MyApp extends ConsumerWidget {
           theme: materialTheme.light(),
           darkTheme: materialTheme.dark(),
           themeMode: ThemeMode.system,
-          home: const SplashScreen(),
+          home: const AnimatedSplashScreen(),
           debugShowCheckedModeBanner: false,
         );
       },
