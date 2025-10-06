@@ -12,7 +12,7 @@ Future<void> startRazorpayPayment({
   required int amount,
   required VoidCallback onSuccess,
   VoidCallback? onError,
- required int itemId, // Optional: Pass itemId if needed
+  int? itemId, // Optional: Pass itemId if needed
 }) async {
   final razorpayService = RazorpayPaymentService();
   await razorpayService.initialize();
@@ -22,9 +22,11 @@ Future<void> startRazorpayPayment({
 
   successSub = razorpayService.onPaymentSuccess.listen((_) {
     // Payment successful
-    ref
-        .read(cartNotifierProvider.notifier)
-        .removeFromCart(itemId); // or pass itemId if single item
+    if (itemId != null) {
+      ref.read(cartNotifierProvider.notifier).removeFromCart(itemId);
+    } else {
+      ref.read(cartNotifierProvider.notifier).clearCart();
+    }
 
     onSuccess();
 

@@ -1,5 +1,6 @@
 import 'package:e_commerce_app/core/widgets/confirmation_dialog.dart';
 import 'package:e_commerce_app/presentation/cart/providers/cart_providers.dart';
+import 'package:e_commerce_app/presentation/cart/screens/checkout_screen.dart';
 import 'package:e_commerce_app/presentation/cart/screens/single_item_checkout_screen.dart';
 import 'package:e_commerce_app/presentation/cart/widgets/cart_shimmer.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,10 @@ class CartScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.delete_sweep_outlined, color: theme.colorScheme.error),
+            icon: Icon(
+              Icons.delete_sweep_outlined,
+              color: theme.colorScheme.error,
+            ),
             onPressed: () async {
               final confirmed = await showConfirmationDialog(context);
               if (confirmed == true) {
@@ -484,76 +488,80 @@ class CartScreen extends ConsumerWidget {
                   ),
                 ),
 
-                // Total + Checkout Button (commented out as in original)
-                // SafeArea(
-                //   top: false,
-                //   child: Container(
-                //     padding: const EdgeInsets.all(16),
-                //     decoration: BoxDecoration(
-                //       color: theme.colorScheme.surface,
-                //       borderRadius: const BorderRadius.vertical(
-                //         top: Radius.circular(24),
-                //       ),
-                //       boxShadow: [
-                //         BoxShadow(
-                //           color: theme.colorScheme.shadow.withOpacity(0.1),
-                //           blurRadius: 16,
-                //           offset: const Offset(0, -4),
-                //         ),
-                //       ],
-                //     ),
-                //     child: Column(
-                //       mainAxisSize: MainAxisSize.min,
-                //       children: [
-                //         Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: [
-                //             Text(
-                //               'Total',
-                //               style: theme.textTheme.titleMedium?.copyWith(
-                //                 color: theme.colorScheme.onSurface.withOpacity(0.7),
-                //               ),
-                //             ),
-                //             Text(
-                //               '\$${cart.items.fold<double>(0, (sum, item) => sum + item.price * item.quantity).toStringAsFixed(2)}',
-                //               style: theme.textTheme.headlineSmall?.copyWith(
-                //                 fontWeight: FontWeight.w700,
-                //                 color: theme.colorScheme.primary,
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //         const SizedBox(height: 16),
-                //         SizedBox(
-                //           width: double.infinity,
-                //           child: FilledButton(
-                //             onPressed: () {
-                //               Navigator.push(
-                //                 context,
-                //                 MaterialPageRoute(
-                //                   builder: (context) => const CheckoutScreen(),
-                //                 ),
-                //               );
-                //             },
-                //             style: FilledButton.styleFrom(
-                //               padding: const EdgeInsets.symmetric(vertical: 16),
-                //               shape: RoundedRectangleBorder(
-                //                 borderRadius: BorderRadius.circular(12),
-                //               ),
-                //             ),
-                //             child: const Text(
-                //               'Proceed to Checkout',
-                //               style: TextStyle(
-                //                 fontSize: 16,
-                //                 fontWeight: FontWeight.w600,
-                //               ),
-                //             ),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
+                // Total + Checkout Button
+                SafeArea(
+                  top: false,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(24),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.shadow.withOpacity(0.1),
+                          blurRadius: 16,
+                          offset: const Offset(0, -4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Total',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: theme.colorScheme.onSurface.withOpacity(
+                                  0.7,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              '\$${cart.items.fold<double>(0, (sum, item) => sum + item.price * item.quantity).toStringAsFixed(2)}',
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: FilledButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          CheckoutScreen(items: cart.items),
+                                ),
+                              );
+                            },
+                            style: FilledButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Proceed to Checkout',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           );
